@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<link rel="shortcut icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
+<link rel="stylesheet" href="{% static 'assets/css/play-video.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/comment.css' %}">
+
+<style>
+  .header-actions {
+    display: none;
+  }
+</style>
+
+<div class="comment" style="padding-top: 100px;">
+  <form action="{% url 'login' %}" method="post"> {% csrf_token %}
+    <input name="username" type="text" aria-describedby="'button-addon" placeholder="Username">
+    <input name="password" type="password" aria-describedby="'button-addon" placeholder="Parol">
+    <h3><a href="{% url 'accounts:signup' %}">Hisobingiz yo'qmi?</a></h3>
+    <input type="submit" value="Kirish">
+  </form>
+</div>
+
+<script src="{% static 'assets/js/script.js' %}"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+{% endblock content %}

@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ object.name }}</title>
+
+  <!-- favicon -->
+  <link rel="shortcut icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
+  <link rel="stylesheet" href="{% static 'assets/css/play-video.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/css/comment.css' %}">
+
+  <!-- google font link -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body id="#top">
+
+
+  <main>
+    <article>
+
+      <!-- #MOVIE DETAIL -->
+
+      <section class="movie-detail">
+        <div class="container">
+
+          <figure class="movie-detail-banner" onclick="toggle();">
+
+            <img src="{{ object.image.url }}" alt="{{ object.name }}">
+
+            <button class="play-btn" onclick="clicc()">
+              <ion-icon name="play-circle-outline"></ion-icon>
+            </button>
+
+          </figure>
+
+          <div class="movie-detail-content">
+
+            <p class="detail-subtitle">Multfilm</p>
+
+            <h1 class="h1 detail-title">{{ object.name }}</h1>
+
+            <div class="meta-wrapper">
+
+              <div class="badge-wrapper">
+                <div class="badge badge-outline">HD</div>
+              </div>
+
+              <div class="ganre-wrapper">
+                <a href="#">{{ object.category }},</a>
+                <a href="#">{{ object.country }},</a>
+                <a href="#">{{ object.language }},</a>
+              </div>
+
+              <div class="date-time">
+                <div>
+                  <ion-icon name="calendar-outline"></ion-icon>
+                  <time datetime="2021">{{ object.date|date:"Y" }}</time>
+                </div>
+
+                <div>
+                  <ion-icon name="time-outline"></ion-icon>
+                  <time datetime="PT115M">{{ object.min }} min</time>
+                </div>
+              </div>
+            </div>
+
+            <div class="details-actions">
+              <button class="share">
+                <ion-icon name="share-social"></ion-icon>
+                <span>Jo'natish</span>
+              </button>
+
+              <div class="title-wrapper">
+                <p class="title">Tezkor</p>
+                <p class="text">Eng Sara Kinolar</p>
+              </div>
+
+              <button class="btn btn-primary" onclick="toggle();">
+                <ion-icon name="play"></ion-icon>
+                <span>Hozir Ko'rish</span>
+              </button>
+            </div>
+
+            <div class="video-container">
+              <center>
+                <video controls width="90%;">
+                  <source src="{{ object.cartoon.url }}">
+                </video>
+              </center>
+              <img onclick="toggle();" src="https://th.bing.com/th/id/OIP.RnP_vb3wnQkK8L-I8wP26wAAAA?pid=ImgDet&rs=1"
+                class="close">
+            </div>
+
+
+            <a href="{{ object.cartoon.url }}" download class="download-btn">
+              <span>Yuklab Olmoq</span>
+              <ion-icon name="download-outline"></ion-icon>
+            </a>
+          </div>
+        </div>
+
+        <br>
+
+        {% if user.is_authenticated %}
+          <div class="comment">
+            <form action="{% url 'cartoon_comment_new' object.id %}" method="post"> {% csrf_token %}
+              <input name="body" type="text" id="fname" aria-describedby="'button-addon" placeholder="Izoh Qoldiring">
+
+              <input type="submit" value="Submit">
+            </form>
+          </div>
+        {% else %}
+          <h3 style="color: #fff; text-align: center;">Izoh yozish uchun avval saytdan ro'yxatdan o'ting</h3>
+          <br>
+        {% endif %}
+        <h3 style="color: #fff; text-align: center;">{{ object.cartooncomment_set.all.count }} ta izoh</h3>
+        
+        {% for comment in object.cartooncomment_set.all %}
+
+          <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+            <section class="content-item" id="comments">
+              <div class="container">
+                <div class="row">
+                  <div class="col-sm-8">
+
+                    <!-- COMMENT 1 - START -->
+                    <div class="media">
+                      <a class="pull-left" href="{% url 'accounts:profile' comment.user %}"><img class="media-object"
+                        src="{{ comment.user.avatar.url }}" alt=""></a>
+                      <div class="media-body">
+                        <h4 class="media-heading">{{ comment.user }}</h4>
+                        <p>{{ comment.body }}</p>
+                        <ul class="list-unstyled list-inline media-detail pull-left">
+                          <li><i class="fa fa-calendar"></i>{{ comment.date }}</li>
+                        </ul>
+                        <ul class="list-unstyled list-inline media-detail pull-right">
+                          <li><a href="">Delete</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                    <!-- COMMENT 1 - END -->
+
+                  </div>
+                </div>
+              </div>
+            </section>
+        {% endfor %}
+
+        <!-- #Random cartoons -->
+        <section class="tv-series">
+          
+          <h2 class="h2 section-title">Eng Sara Multfilmlar</h2>
+
+          <div class="container">
+            <ul class="movies-list" style="display: inline-flex;">
+
+              <ul class="movies-list">
+                {% for cartoon in random_cartoons %}
+                <li>
+                    <div class="movie-card">
+                        <a href="{% url 'cartoon-detail' cartoon.pk %}">
+                            <figure class="card-banner">
+                                <img src="{{ cartoon.image.url }}" alt="{{ cartoon.name }}">
+                            </figure>
+                        </a>
+
+                        <div class="title-wrapper">
+                            <a href="{% url 'cartoon-detail' cartoon.pk %}">
+                                <h3 class="card-title">{{ cartoon.name }}</h3>
+                            </a>
+
+                            <time datetime="2022">{{ r_cartoon.date|date:"Y" }}</time>
+                        </div>
+
+                        <div class="card-meta">
+                            <div class="badge badge-outline">HD</div>
+
+                            <div class="duration">
+                                <ion-icon name="time-outline"></ion-icon>
+
+                                <time datetime="PT122M">{{ cartoon.min }} min</time>
+                            </div>
+
+                            <div class="rating">
+                                <ion-icon name="star"></ion-icon>
+
+                                <data>7.8</data>
+                            </div>
+                        </div>
+
+                    </div>
+                </li>
+                {% endfor %}
+
+            </ul>
+
+            </ul>
+
+          </div>
+        </section>
+
+    </article>
+  </main>
+
+
+
+  <!-- custom js link -->
+  <script src="{% static 'assets/js/script.js' %}"></script>
+  <script src="{% static 'assets/js/play_video.js' %}"></script>
+
+  <!-- ionicon link -->
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+</body>
+
+</html>
+
+{% endblock content %}

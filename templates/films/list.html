@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KINO - BATL</title>
+
+    <!-- favicon -->
+    <link rel="shortcut icon" href="{% static 'images/favicon.svg' %}" type="image/svg+xml">
+
+    <!-- 
+    - custom css link
+  -->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+
+    <!-- 
+    - google font link
+  -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body onload="LoadYouTubeIframeAPI()">
+    <script type="text/javascript">
+        var player = null;
+        var playerParams =
+        {
+            playerVars:
+            {
+                "enablejsapi":1,
+                "origin":document.domain,
+                "rel":0
+            },
+            events:
+            {
+                "onReady":onPlayerReady,
+                "onError":onPlayerError,
+                "onStateChange":onPlayerStateChange
+            }
+        };
+        function LoadYouTubeIframeAPI()
+        {
+            var scriptElement = document.createElement("script");
+            scriptElement.src = "http://www.youtube.com/iframe_api";
+            var firstScriptElement = document.getElementsByTagName("script")[0];
+            firstScriptElement.parentNode.insertBefore(scriptElement,firstScriptElement);
+        }
+        function onYouTubeIframeAPIReady()
+        {
+            player = new YT.Player("player",playerParams);
+        }
+        function onPlayerReady(event)
+        {
+            player.loadVideoById("MKHcGbGcjFc");
+        }
+    </script>
+</body>
+
+
+
+<style>
+    {% for random in random_films %}
+        .hero {
+            background: url("{{random.image.url}}") no-repeat;
+            background-size: cover;
+            background-position: center;
+            min-height: 750px;
+            height: 100vh;
+            max-height: 1000px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding-block: var(--section-padding);
+        }
+    {% endfor %}
+</style>
+
+<body id="top">
+
+    <!-- HEADER -->
+    <main>
+        <article>
+
+            <!-- HERO-->
+            {% for random in random_film %}
+                <section class="hero">
+                    <div class="container">
+                        <div class="hero-content">
+                            <p class="hero-subtitle">KINO - BATL</p>
+                            <h1 class="h1 hero-title">{{ random.name }}</h1>
+                            <div class="meta-wrapper">
+                                <div class="badge-wrapper">
+                                    <div class="badge badge-outline">HD</div>
+                                </div>
+
+                                <div class="ganre-wrapper">
+                                    <a href="#">{{random.country}}</a>
+                                    <a href="#">{{random.category}}</a>
+                                </div>
+
+                                <div class="date-time">
+                                    <div>
+                                        <ion-icon name="calendar-outline"></ion-icon>
+                                        <time datetime="2022">{{ random.date|date:"Y" }}</time>
+                                    </div>
+
+                                    <div>
+                                        <ion-icon name="time-outline"></ion-icon>
+                                        <time datetime="PT128M">{{ random.min }} min</time>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a href="{% url 'film-detail' random.pk %}">
+                                <button class="btn btn-primary">
+                                    <ion-icon name="play"></ion-icon>
+
+                                    <span>Hozir Ko'rish</span>
+                                </button>
+                            </a>
+                        </div>
+
+                    </div>
+                </section>
+            {% endfor %}
+
+
+
+
+            <!-- #UPCOMING -->
+
+            <section class="upcoming">
+                <div class="container">
+                    <div class="flex-wrapper">
+                        <div class="title-wrapper">
+                            <p class="section-subtitle">Men sizga bularni</p>
+                            <h2 class="h2 section-title">Tavsiya qilaman</h2>
+                        </div>
+                    </div>
+
+
+                    <ul class="movies-list  has-scrollbar">
+                        {% for r_film in random_films %}
+                        <li>
+                            <div class="movie-card">
+                                <a href="{% url 'film-detail' r_film.pk %}">
+                                    <figure class="card-banner">
+                                        <img src="{{ r_film.image.url }}" alt="{{ r_film.name }}">
+                                    </figure>
+                                </a>
+
+                                <div class="title-wrapper">
+                                    <a href="{% url 'film-detail' r_film.pk %}">
+                                        <h3 class="card-title">{{ r_film.name }}</h3>
+                                    </a>
+
+                                    <time datetime="2022">{{ r_film.date|date:"Y" }}</time>
+                                </div>
+
+                                <div class="card-meta">
+                                    <div class="badge badge-outline">HD</div>
+
+                                    <div class="duration">
+                                        <ion-icon name="time-outline"></ion-icon>
+
+                                        <time datetime="PT137M">{{ r_film.min }} min</time>
+                                    </div>
+
+                                    <div class="rating">
+                                        <ion-icon name="star"></ion-icon>
+
+                                        <data>8.5</data>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+
+                </div>
+            </section>
+
+
+            <!-- All Films -->
+
+            <section class="top-rated">
+                <div class="container">
+                    <h2 class="h2 section-title">Barcha Kinolar</h2>
+
+                    <ul class="filter-list">
+                        {% for category in categories %}
+                            <li>
+                                <a class="filter-btn" href="{% url 'film-category' category.name %}">{{ category.name }}</a>
+                            </li>
+                        {% endfor %}
+
+                    </ul>
+
+                    <ul class="movies-list">
+                        {% for film in films %}
+                        <li>
+                            <div class="movie-card">
+                                <a href="{% url 'film-detail' film.pk %}">
+                                    <figure class="card-banner">
+                                        <img src="{{ film.image.url }}" alt="{{ film.name }}">
+                                    </figure>
+                                </a>
+
+                                <div class="title-wrapper">
+                                    <a href="{% url 'film-detail' film.pk %}">
+                                        <h3 class="card-title">{{ film.name }}</h3>
+                                    </a>
+
+                                    <time datetime="2022">{{ r_film.date|date:"Y" }}</time>
+                                </div>
+
+                                <div class="card-meta">
+                                    <div class="badge badge-outline">HD</div>
+
+                                    <div class="duration">
+                                        <ion-icon name="time-outline"></ion-icon>
+
+                                        <time datetime="PT122M">{{ film.min }} min</time>
+                                    </div>
+
+                                    <div class="rating">
+                                        <ion-icon name="star"></ion-icon>
+
+                                        <data>7.8</data>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </li>
+                        {% endfor %}
+
+                    </ul>
+
+                </div>
+            </section>
+
+            <!-- custom js link -->
+            <script src="{% static 'assets/js/script.js' %}"></script>
+
+            <!-- ionicon link -->
+            <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+            <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+
+</html>
+{% endblock content %}

@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KINO - BATL</title>
+
+    <!-- favicon -->
+    <link rel="shortcut icon" href="{% static 'images/favicon.svg' %}" type="image/svg+xml">
+
+    <!-- custom css link -->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+
+    <!-- google font link -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<style>
+    {% for random in random_serial %}
+        .hero {
+            background: url("{{random.image.url}}") no-repeat;
+            background-size: cover;
+            background-position: center;
+            min-height: 750px;
+            height: 100vh;
+            max-height: 1000px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding-block: var(--section-padding);
+        }
+    {% endfor %}
+</style>
+
+<body id="top">
+
+    <!-- HEADER -->
+    <main>
+        <article>
+
+            <!-- HERO-->
+            {% for random in random_serial %}
+                <section class="hero">
+                    <div class="container">
+                        <div class="hero-content">
+                            <p class="hero-subtitle">KINO - BATL</p>
+                            <h1 class="h1 hero-title">{{ random.name }}</h1>
+                            <div class="meta-wrapper">
+                                <div class="badge-wrapper">
+                                    <div class="badge badge-outline">HD</div>
+                                </div>
+
+                                <div class="ganre-wrapper">
+                                    <a href="#">{{random.country}}</a>
+                                    <a href="#">{{random.category}}</a>
+                                </div>
+
+                                <div class="date-time">
+                                    <div>
+                                        <ion-icon name="calendar-outline"></ion-icon>
+                                        <time datetime="2022">{{ random.date|date:"Y" }}</time>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a href="{% url 'part-serial' random.pk %}">
+                                <button class="btn btn-primary">
+                                    <ion-icon name="play"></ion-icon>
+
+                                    <span>Hozir Ko'rish</span>
+                                </button>
+                            </a>
+                        </div>
+
+                    </div>
+                </section>
+            {% endfor %}
+
+
+
+
+            <!-- #UPCOMING -->
+
+            <section class="upcoming">
+                <div class="container">
+                    <div class="flex-wrapper">
+                        <div class="title-wrapper">
+                            <p class="section-subtitle">Men sizga bularni</p>
+                            <h2 class="h2 section-title">Taklif Qilaman</h2>
+                        </div>
+
+                    </div>
+
+
+                    <ul class="movies-list  has-scrollbar">
+                        {% for r_serial in random_series %}
+                        <li>
+                            <div class="movie-card">
+                                <a href="{% url 'part-serial' r_serial.pk %}">
+                                    <figure class="card-banner">
+                                        <img src="{{ r_serial.image.url }}" alt="{{ r_serial.name }}">
+                                    </figure>
+                                </a>
+
+                                <div class="title-wrapper">
+                                    <a href="#">
+                                        <h3 class="card-title">{{ r_serial.name }}</h3>
+                                    </a>
+
+                                    <time datetime="2022">{{ r_serial.date|date:"Y" }}</time>
+                                </div>
+
+                                <div class="card-meta">
+                                    <div class="badge badge-outline">HD</div>
+                                </div>
+
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+
+                </div>
+            </section>
+
+
+            <!-- All serials -->
+
+            <section class="top-rated">
+                <div class="container">
+                    <h2 class="h2 section-title">Barcha Seriallar</h2>
+
+                    <ul class="filter-list">
+                        {% for category in categories %}
+                            <li>
+                                <a class="filter-btn" href="{% url 'serial-category' category.name %}">{{ category.name }}</a>
+                            </li>
+                        {% endfor %}
+
+                    </ul>
+
+                    <ul class="movies-list">
+                        {% for serial in series %}
+                        <li>
+                            <div class="movie-card">
+                                <a href="{% url 'part-serial' serial.pk %}">
+                                    <figure class="card-banner">
+                                        <img src="{{ serial.image.url }}" alt="{{ serial.name }}">
+                                    </figure>
+                                </a>
+
+                                <div class="title-wrapper">
+                                    <a href="#">
+                                        <h3 class="card-title">{{ serial.name }}</h3>
+                                    </a>
+
+                                    <time datetime="2022">{{ serial.date|date:"Y" }}</time>
+                                </div>
+
+                                <div class="card-meta">
+                                    <div class="badge badge-outline">HD</div>
+                                </div>
+
+                            </div>
+                        </li>
+                        {% endfor %}
+
+                    </ul>
+
+                </div>
+            </section>
+
+            <!-- custom js link -->
+            <script src="{% static 'assets/js/script.js' %}"></script>
+
+            <!-- ionicon link -->
+            <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+            <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+</body>
+
+</html>
+{% endblock content %}

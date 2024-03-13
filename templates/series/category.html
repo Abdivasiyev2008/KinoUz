@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- favicon -->
+    <link rel="shortcut icon" href="{% static 'images/favicon.svg' %}" type="image/svg+xml">
+
+    <!-- 
+    - custom css link
+  -->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+
+    <!-- 
+    - google font link
+  -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body id="top">
+
+    <!-- All series -->
+
+    <section class="top-rated">
+        <div class="container">
+            <h2 class="h2 section-title">Qidiruv Natijalari</h2>
+
+            <ul class="filter-list">
+                {% for category in categories %}
+                <li>
+                    <a class="filter-btn" href="{% url 'serial-category' category.name %}">{{ category.name }}</a>
+                </li>
+                {% endfor %}
+
+            </ul>
+
+            <ul class="movies-list">
+                {% for serial in series %}
+                <li>
+                    <div class="movie-card">
+                        <a href="{% url 'part-serial' serial.pk %}">
+                            <figure class="card-banner">
+                                <img src="{{ serial.image.url }}" alt="{{ serial.name }}">
+                            </figure>
+                        </a>
+
+                        <div class="title-wrapper">
+                            <a href="{% url 'part-serial' serial.pk %}">
+                                <h3 class="card-title">{{ serial.name }}</h3>
+                            </a>
+
+                            <time datetime="2022">{{ serial.date|date:"Y" }}</time>
+                        </div>
+
+
+                    </div>
+                </li>
+                {% endfor %}
+
+            </ul>
+
+        </div>
+    </section>
+
+    <!-- custom js link -->
+    <script src="{% static 'assets/js/script.js' %}"></script>
+
+    <!-- ionicon link -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+</body>
+
+</html>
+{% endblock content %}
